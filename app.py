@@ -26,7 +26,7 @@ def main():
     # Create a thread-safe queue
     transcription_queue = queue.Queue()
     
-    st.title("Real-Time Transcription :studio_microphone:")
+    st.title("Note taking / Real-Time Transcription :studio_microphone:")
     initialize_session_state()
     
 
@@ -34,8 +34,7 @@ def main():
     deepgram = init_deepgram(st.secrets["DEEPGRAM_API_KEY"])
 
     col1, col2 = st.columns(2)
-    transcription_container = col1.container()
-    summary_container = col2.container()
+    
 
     if col2.button('Clear Transcription'):
         reset_session_state()
@@ -49,10 +48,10 @@ def main():
 
         else:
             # Display the transcription and summaries
-            transcription_container.text_area("Transcription", st.session_state.transcription, height=300)
-            summary_container.text_area("** Summaries **")
+            st.text_area("Transcription", st.session_state.transcription, height=300)
+            st.write("Summaries")
             for summary in st.session_state['summaries']:
-                summary_container.write(summary)
+                st.markdown(summary)
 
 if __name__ == "__main__":
     main()

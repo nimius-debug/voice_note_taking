@@ -25,7 +25,7 @@ def on_error():
         print(f"Error: {error}")
     return callback
 
-async def transcribe_live(dg_client, transcription_queue, session_state):
+async def transcribe_live(dg_client, transcription_queue, session_state, length=200):
     dg_connection = dg_client.listen.live.v("1")
     options = LiveOptions(
         smart_format=True,
@@ -57,11 +57,11 @@ async def transcribe_live(dg_client, transcription_queue, session_state):
                 st.write(transcript)
 
             print (len(session_state.transcription) - last_pos)
-            if current_time - last_summary_time >= 10 and session_state['state'] and (len(session_state.transcription) - last_pos >= 10):
+            if current_time - last_summary_time >= 30 and session_state['state'] and (len(session_state.transcription) - last_pos >= length):
                 # Update this to your summarizing logic
                 summary, new_pos = summarize_text(session_state.transcription, last_pos)
                 session_state['summaries'].append(summary)
-                st.markdown(f':nerd_face: ### Summaries :green[{summary}]')
+                st.markdown(f':nerd_face: Summaries :green[{summary}]')
                 st.divider()
                 last_summary_time = current_time
                 last_pos = new_pos
